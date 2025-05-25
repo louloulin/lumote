@@ -1,0 +1,34 @@
+# Blinko 最小开发环境 - 仅包含必需的 PostgreSQL
+# 使用方法: docker-compose -f docker-compose.minimal.yml up -d
+
+version: '3.8'
+
+networks:
+  blinko-minimal:
+    driver: bridge
+
+services:
+  # PostgreSQL - 唯一必需的核心依赖
+  postgres:
+    image: postgres:15-alpine
+    container_name: blinko-minimal-postgres
+    environment:
+      POSTGRES_DB: blinko
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_minimal_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    restart: unless-stopped
+    networks:
+      - blinko-minimal
+
+volumes:
+  postgres_minimal_data:
+    driver: local
