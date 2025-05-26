@@ -160,7 +160,7 @@ export class AiModelFactory {
     }
 
     const config = await AiModelFactory.globalConfig();
-    const model = config.embeddingModel.toLowerCase();
+    const model = config.embeddingModel?.toLowerCase() || 'text-embedding-3-small';
     let userConfigDimensions = config.embeddingDimensions;
     let dimensions: number = 0;
     switch (true) {
